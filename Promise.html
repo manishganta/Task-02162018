@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en" ng-app="APP">
+<head>
+<meta charset= "UTF-8">
+<title>Promise</title>
+</head>
+<body>
+	<div ng-controller="theController">
+		<h2>{{myValue}}</h2>
+			<hr>
+		<h2>{{step}}</h2>
+	</div>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+<script >
+angular.module('APP',[]).
+controller('theController',['$scope','$q',function($scope,$q){
+	$scope.addOne= function(num){
+		var q =$q.defer()
+		$scope.step++; 
+		if(angular.isNumber(num)){
+			setTimeout(function(){q.resolve(num+1)},1500)
+		}
+		else{
+			q.reject('Not a Number')
+		}
+		return q.promise
+	}
+	 $scope.step=0
+
+	$scope.myValue =0;
+	$scope.promise=$scope.addOne($scope.myValue)
+	$scope.promise
+	.then(function(v){return $scope.addOne(v)})
+		.then(function(v){return $scope.addOne(v)})
+			.then(function(v){return $scope.addOne(v)})
+				.then(function(v){return $scope.addOne(v)})
+	.then(
+		function(v){$scope.myValue=v},
+		function(err){$scope.myValue=err}
+		)
+
+	 
+	
+}])
+</script>
+</body>
+</html>
